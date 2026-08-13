@@ -1,5 +1,6 @@
 import { Block } from './block.js';
-import { DIFFICULTY } from './config.js';
+import { DIFFICULTY } from '../config.js';
+import { mineBlock } from './mine.js';
 
 export class Blockchain {
   constructor() {
@@ -16,20 +17,23 @@ export class Blockchain {
     return this.chain[this.chain.length - 1];
   }
 
-  addTransaction(transaction) {
-    const { sender, recipient, batchId, weightKg } = transaction;
+  addTransaction(tx) {
+    const { sender, recipient, batchId, weightKg } = tx;
+
     if (!sender || !recipient || !batchId || weightKg == null) {
-      throw new Error('Ogiltig transaktion: saknar obligatoriska fält');
+      throw new Error('Ogiltig transaktion');
     }
+
     if (typeof weightKg !== 'number' || weightKg <= 0) {
       throw new Error('weightKg måste vara ett positivt tal');
     }
-    this.pendingTransactions.push({ sender, recipient, batchId, weightKg });
+
+    this.pendingTransactions.push(tx);
   }
 
   minePendingTransactions() {
     if (this.pendingTransactions.length === 0) {
-      throw new Error('Inga väntande transaktioner att mine:a');
+      throw new Error('Inga pending transactions');
     }
 
     const block = new Block(
@@ -39,9 +43,11 @@ export class Blockchain {
       this.getLatestBlock().hash
     );
 
-    block.mineBlock(this.difficulty);
+    mineBlock(block, this.difficulty);
+
     this.chain.push(block);
     this.pendingTransactions = [];
+
     return block;
   }
 

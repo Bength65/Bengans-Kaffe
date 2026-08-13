@@ -1,20 +1,12 @@
 import { calculateHash } from './hash.js';
 
 export function mineBlock(block, difficulty) {
-  let nonce = 0;
-  let hash = '';
+  const target = '0'.repeat(difficulty);
 
-  const prefix = '0'.repeat(difficulty);
-
-  while (!hash.startsWith(prefix)) {
-    nonce++;
-    hash = calculateHash(
-      block.index +
-      block.previousHash +
-      JSON.stringify(block.transactions) +
-      nonce
-    );
+  while (!block.hash.startsWith(target)) {
+    block.nonce++;
+    block.hash = block.calculateHash();
   }
 
-  return { ...block, nonce, hash };
+  return block;
 }

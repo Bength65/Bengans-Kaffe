@@ -1,5 +1,5 @@
 import crypto from 'crypto';
 
-export function calculateHash(data) {
+export function sha256(data) {
   return crypto.createHash('sha256').update(data).digest('hex');
 }
