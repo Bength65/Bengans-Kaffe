@@ -1,16 +1,13 @@
 import { describe, it, expect } from 'vitest';
-import { mineBlock } from '../../src/blockchain/mine.js';
+import { Block } from '../../src/blockchain/block.js';
 
 describe('Mining', () => {
-  it('should find a hash starting with difficulty zeros', () => {
-    const block = {
-      index: 1,
-      previousHash: 'abc',
-      transactions: [],
-      nonce: 0
-    };
+  it('should mine a block with correct difficulty', () => {
+    const block = new Block(1, Date.now(), [{ a: 1 }], '0');
 
-    const mined = mineBlock(block, 1); // difficulty = 1 in test
-    expect(mined.hash.startsWith('0')).toBe(true);
+    block.mineBlock(2);
+
+    expect(block.hash.startsWith('00')).toBe(true);
+    expect(block.nonce).toBeGreaterThan(0);
   });
 });

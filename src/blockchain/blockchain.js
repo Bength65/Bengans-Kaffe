@@ -1,6 +1,6 @@
 import { Block } from './block.js';
 import { DIFFICULTY } from '../config.js';
-import { mineBlock } from './mine.js';
+
 
 export class Blockchain {
   constructor() {
@@ -43,7 +43,7 @@ export class Blockchain {
       this.getLatestBlock().hash
     );
 
-    mineBlock(block, this.difficulty);
+    block.mineBlock(this.difficulty);
 
     this.chain.push(block);
     this.pendingTransactions = [];
