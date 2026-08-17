@@ -1,7 +1,6 @@
 import { Block } from './block.js';
 import { DIFFICULTY } from '../config.js';
 
-
 export class Blockchain {
   constructor() {
     this.chain = [this.createGenesisBlock()];
@@ -10,7 +9,7 @@ export class Blockchain {
   }
 
   createGenesisBlock() {
-    return new Block(0, Date.now(), [], '0');
+    return new Block(0, new Date().toLocaleString('sv-SE'), [], '0');
   }
 
   getLatestBlock() {
@@ -24,11 +23,14 @@ export class Blockchain {
       throw new Error('Ogiltig transaktion');
     }
 
-    if (typeof weightKg !== 'number' || weightKg <= 0) {
+    const weight = Number(weightKg);
+    if (isNaN(weight) || weight <= 0) {
       throw new Error('weightKg måste vara ett positivt tal');
     }
 
-    this.pendingTransactions.push(tx);
+    const transaction = { sender, recipient, batchId, weightKg: weight };
+    this.pendingTransactions.push(transaction);
+    console.log('Pending:', this.pendingTransactions);
   }
 
   minePendingTransactions() {
@@ -38,13 +40,12 @@ export class Blockchain {
 
     const block = new Block(
       this.chain.length,
-      Date.now(),
+      new Date().toLocaleString('sv-SE'),
       [...this.pendingTransactions],
       this.getLatestBlock().hash
     );
 
     block.mineBlock(this.difficulty);
-
     this.chain.push(block);
     this.pendingTransactions = [];
 

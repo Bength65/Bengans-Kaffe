@@ -1,8 +1,12 @@
 import express from 'express';
 import { Blockchain } from './blockchain/blockchain.js';
+import cors from 'cors';
+import path from 'path';
 
 const app = express();
+app.use(cors());
 app.use(express.json());
+app.use(express.static('public'));
 
 const blockchain = new Blockchain();
 
@@ -41,6 +45,12 @@ app.post('/mine', (req, res) => {
     res.status(400).json({ error: err.message });
   }
 });
+
+// GET /pending
+app.get('/pending', (req, res) => {
+  res.json(blockchain.pendingTransactions);
+});
+
 
 // Endast för testmiljö
 if (process.env.NODE_ENV === 'test') {

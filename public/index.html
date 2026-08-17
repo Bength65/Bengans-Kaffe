@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8">
+  <title>Coffee Blockchain Dashboard</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      display: flex;
+      height: 100vh;
+    }
+
+    .left {
+      width: 35%;
+      background: #fff;
+      padding: 20px;
+      box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+      overflow-y: auto;
+    }
+
+    .right {
+      width: 65%;
+      padding: 20px;
+      overflow-y: scroll;
+    }
+
+    h1, h2, h3 {
+      margin-top: 0;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    input {
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    button {
+      padding: 12px;
+      font-size: 16px;
+      background: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    button:hover {
+      background: #45a049;
+    }
+
+    .mine-btn {
+      background: #FF9800;
+    }
+
+    .mine-btn:hover {
+      background: #e68a00;
+    }
+
+    pre {
+      background: #222;
+      color: #0f0;
+      padding: 20px;
+      border-radius: 6px;
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="left">
+    <h1>Coffee Blockchain</h1>
+
+    <form id="txForm">
+      <input name="sender" placeholder="Farm" required>
+      <input name="recipient" placeholder="Roastery" required>
+      <input name="batchId" placeholder="Batch ID" required>
+      <input name="weightKg" placeholder="Weight (kg)" type="number" required>
+    </form>
+
+    <button onclick="sendTransaction()">Skicka transaktion</button>
+    <button class="mine-btn" onclick="mineBlock()">Mine:a block</button>
+
+    <h3>Pending Transactions</h3>
+    <pre id="pendingOutput">Inga pending ännu...</pre>
+
+    <button onclick="loadChain()" style="background:#2196F3;">
+      Uppdatera Blockchain
+    </button>
+  </div>
+
+  <div class="right">
+    <h2>Blockchain</h2>
+    <pre id="output">Ingen data ännu...</pre>
+  </div>
+
+<script>
+  const API = 'http://localhost:3000';
+
+  // 1️⃣ Skicka transaktion
+  async function sendTransaction() {
+    const form = document.getElementById('txForm');
+    const data = Object.fromEntries(new FormData(form));
+
+    try {
+      const txRes = await fetch(API + '/transactions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+
+      const txData = await txRes.json();
+      console.log("Transaktion sparad:", txData);
+
+      await loadPending(); // uppdatera pending-panelen
+
+    } catch (err) {
+      console.error("Fel vid skickande av transaktion:", err);
+    }
+  }
+
+  // 2️⃣ Mine:a block
+  async function mineBlock() {
+    try {
+      const mineRes = await fetch(API + '/mine', { method: 'POST' });
+      const mineData = await mineRes.json();
+      console.log("Block mineat:", mineData);
+
+      await loadChain();   // uppdatera blockchain-panelen
+      await loadPending(); // pending töms → uppdatera panelen
+
+    } catch (err) {
+      console.error("Fel vid mining:", err);
+    }
+  }
+
+  // 3️⃣ Hämta hela kedjan
+  async function loadChain() {
+    try {
+      const res = await fetch(API + '/blockchain');
+      const chain = await res.json();
+      document.getElementById('output').textContent =
+        JSON.stringify(chain, null, 2);
+    } catch (err) {
+      console.error("Kunde inte hämta blockchain:", err);
+    }
+  }
+
+  // 4️⃣ Hämta pending transactions
+  async function loadPending() {
+    try {
+      const res = await fetch(API + '/pending');
+      const pending = await res.json();
+      document.getElementById('pendingOutput').textContent =
+        JSON.stringify(pending, null, 2);
+    } catch (err) {
+      document.getElementById('pendingOutput').textContent =
+        "Kunde inte hämta pending transactions.";
+    }
+  }
+
+  // Ladda kedjan direkt vid start
+  loadChain();
+  loadPending();
+</script>
+
+</body>
+</html>
