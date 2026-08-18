@@ -26,8 +26,9 @@
       overflow-y: scroll;
     }
 
-    h1, h2, h3 {
+    h1, h2, h3, h4, h5 {
       margin-top: 0;
+      margin-bottom: 2px;
     }
 
     form {
@@ -81,9 +82,13 @@
     <h1>Coffee Blockchain</h1>
 
     <form id="txForm">
+      <h5>Sender</h5>
       <input name="sender" placeholder="Farm" required>
+      <h5>Recipient</h5>
       <input name="recipient" placeholder="Roastery" required>
+      <h5>Batch ID</h5>
       <input name="batchId" placeholder="Batch ID" required>
+      <h5>Weight (kg)</h5>
       <input name="weightKg" placeholder="Weight (kg)" type="number" required>
     </form>
 

@@ -1,5 +1,6 @@
 import { Block } from './block.js';
 import { DIFFICULTY } from '../config.js';
+import { BlockModel } from '../models/BlockModel.js';
 
 export class Blockchain {
   constructor() {
@@ -33,7 +34,7 @@ export class Blockchain {
     console.log('Pending:', this.pendingTransactions);
   }
 
-  minePendingTransactions() {
+  async minePendingTransactions() {
     if (this.pendingTransactions.length === 0) {
       throw new Error('Inga pending transactions');
     }
@@ -46,10 +47,44 @@ export class Blockchain {
     );
 
     block.mineBlock(this.difficulty);
+
+    // Spara blocket i RAM
     this.chain.push(block);
+
+    // Spara blocket i MongoDB
+    await BlockModel.create({
+      index: block.index,
+      timestamp: block.timestamp,
+      transactions: block.transactions,
+      previousHash: block.previousHash,
+      hash: block.hash,
+      nonce: block.nonce
+    });
+
     this.pendingTransactions = [];
 
     return block;
+  }
+
+  // 🟩 FIX: Ladda riktiga Block-instancer från MongoDB
+  async loadChainFromDB() {
+    const blocks = await BlockModel.find().sort({ index: 1 });
+
+    if (blocks.length > 0) {
+      this.chain = blocks.map(b => {
+        const block = new Block(
+          b.index,
+          b.timestamp,
+          b.transactions,
+          b.previousHash
+        );
+
+        block.hash = b.hash;     // Behåll hash från DB
+        block.nonce = b.nonce;   // Behåll nonce från DB
+
+        return block;
+      });
+    }
   }
 
   isChainValid() {
