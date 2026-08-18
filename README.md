@@ -4,7 +4,7 @@
    https://github.com/<ditt-namn>/Bengans-Kaffe/commit/96021fdaeb5d6e9c5bada6fd5158791019742579
 
 2. **GREEN commit:**  
-   https://github.com/<ditt-namn>/Bengans-Kaffe/commit/<hash>
+   https://github.com/<ditt-namn>/Bengans-Kaffe/commit/5fb17779ff3dd4873adf89e5bfb45a786e0ab85e
 
 3. **RED commit (mining):**  
    https://github.com/<ditt-namn>/Bengans-Kaffe/commit/<hash>
