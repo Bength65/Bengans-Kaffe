@@ -10,4 +10,4 @@
    https://github.com/<ditt-namn>/Bengans-Kaffe/commit/04252c66b0a5b57535233bcb5f2dc6f945202845
 
 4. **GREEN commit (mining):**  
-   https://github.com/<ditt-namn>/Bengans-Kaffe/commit/<hash>
+   https://github.com/<ditt-namn>/Bengans-Kaffe/commit/4e66664f718534ae2f6720b8935d12993f513808
