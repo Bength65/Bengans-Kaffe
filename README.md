@@ -23,18 +23,18 @@ Byggt med Node.js, Express, MongoDB och Mongoose.
 <img width="1413" height="799" alt="Skärmbild 2026-08-18 170430" src="https://github.com/user-attachments/assets/967ae16c-17d6-423b-94a9-a2a54d7668d0" />
 <img width="1414" height="799" alt="Skärmbild 2026-08-18 170441" src="https://github.com/user-attachments/assets/1e659259-5a58-4927-acb7-0d650852c918" />
 
-⚙️ Installation och körning
+⚙️ Installation och körning:
 git clone https://github.com/Bength65/Bengans-Kaffe.git
 cd Bengans-Kaffe
 
-Installera beroenden
+Installera beroenden:
 npm install
 
-Skapa .env‑fil
+Skapa .env‑fil:
 MONGO_URI=mongodb+srv://<user>:<password>@cluster0.mongodb.net/coffeechain?retryWrites=true&w=majority
 PORT=3000
 
-Starta servern
+Starta servern:
 npm run dev
 
 Du ska se:
@@ -42,7 +42,7 @@ Du ska se:
 Server körs på port 3000
 Difficulty: 3
 
-🔗 API‑endpoints
+🔗 API‑endpoints:
 Metod Endpoint Beskrivning
 GET /blockchain Hämtar hela kedjan och validerar den
 POST /transactions Lägger till en ny transaktion i kön
